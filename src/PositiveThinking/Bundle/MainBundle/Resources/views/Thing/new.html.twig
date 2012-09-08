@@ -1,0 +1,56 @@
+{% form_theme form 'PositiveThinkingMainBundle::form_table_layout.html.twig' %}
+<div id="thing-create-container">
+    {{ form_errors(form) }}
+    <form id="thing-create-form" action="{{ path('thing_create') }}" method="post" {{ form_enctype(form) }}>
+        <table class="records_list table table-condensed table-striped">
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th colspan="4" style="text-align:center">Favorite</th>
+                <th></th>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <th>Thing</th>
+                <th>day</th>
+                <th>week</th>
+                <th>month</th>
+                <th>year</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    {{ form_errors(form.date) }}
+                    {{ form_widget(form.date) }}
+                </td>
+                <td>
+                    {{ form_errors(form.title) }}
+                    {{ form_widget(form.title) }}<br/>
+                    {{ form_errors(form.description) }}
+                    {{ form_widget(form.description) }}
+                </td>
+                <td>
+                    {{ form_errors(form.favoriteDay) }}
+                    {{ form_widget(form.favoriteDay) }}
+                </td>
+                <td>
+                    {{ form_errors(form.favoriteWeek) }}
+                    {{ form_widget(form.favoriteWeek) }}
+                </td>
+                <td>
+                    {{ form_errors(form.favoriteMonth) }}
+                    {{ form_widget(form.favoriteMonth) }}
+                </td>
+                <td>
+                    {{ form_errors(form.favoriteYear) }}
+                    {{ form_widget(form.favoriteYear) }}
+                </td>
+                <td><input id="thing-create-submit" type="submit" value="Submit" class="btn btn-primary"/></td>
+            </tr>
+        </table>
+        {{ form_rest(form) }}
+    </form>
+</div>

@@ -1,0 +1,41 @@
+{% extends "PositiveThinkingMainBundle::layout.html.twig" %}
+
+{% block body %}
+<h1>Thought</h1>
+
+<table class="record_properties">
+    <tbody>
+        <tr>
+            <th>Title</th>
+            <td>{{ entity.title }}</td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td>{{ entity.description }}</td>
+        </tr>
+        <tr>
+            <th>Date</th>
+            <td>{{ entity.date|date('d-m-Y') }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<ul class="record_actions">
+    <li>
+        <a href="{{ path('thing') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('thing_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>
+        <form action="{{ path('thing_delete', { 'id': entity.id }) }}" method="post">
+            {{ form_widget(delete_form) }}
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+</ul>
+{% endblock %}

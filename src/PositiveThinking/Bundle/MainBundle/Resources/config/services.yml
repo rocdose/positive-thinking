@@ -1,0 +1,5 @@
+services:
+  positivethinking.helper.thing:
+    class: PositiveThinking\Helper\ThingHelper
+    arguments:
+      entityManager: "@doctrine.orm.entity_manager"

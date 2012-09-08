@@ -1,0 +1,204 @@
+{% extends "PositiveThinkingMainBundle::layout.html.twig" %}
+
+{% block body %}
+<a href="{{ path('thing') }}"><h1 style="text-align: center;" class="padding-top">My things</h1></a>
+
+<div class="container">
+    <ul class="unstyled favorite-links-list padding-top">
+        <li><strong>Favorites this: </strong></li>
+        <li><a href="{{ path('thing_favorites', {'type': 'week'}) }}">week, </a></li>
+        <li><a href="{{ path('thing_favorites', {'type': 'month'}) }}">month, </a></li>
+        <li><a href="{{ path('thing_favorites', {'type': 'year'}) }}">year</a></li>
+    </ul>
+    <table id="thing-table" class="records_list table table-condensed table-striped">
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th colspan="4" style="text-align:center">Favorite</th>
+                <th></th>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <th>Thing</th>
+                <th>day</th>
+                <th>week</th>
+                <th>month</th>
+                <th>year</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for date, entities_by_date in entities %}
+            {% for entity in entities_by_date %}
+                <tr>
+                    <td>{{ date|date('d-m-Y') }}</td>
+                    <td style="width:50%;">
+                        <ul class="unstyled">
+                            <li>
+                                <a href="{{ path('thing_show', { 'id': entity.id }) }}">{{ entity.title }}</a>
+                                <i class="icon-plus"></i>
+                                <br/>
+                                <span style="display:none">{{ entity.description }}</span>
+                            </li>
+                        </ul>
+                    </td>
+                    <td class="favorite-col">
+                        {% if entity.favoriteDay %}
+                            <a class="favorite" href="{{ path('thing_favorite', { 'id': entity.id, 'type': 'day' }) }}">
+                                <i class="icon-star"></i>
+                            </a>
+                        {% else %}
+                            <a class="favorite" href="{{ path('thing_favorite', { 'id': entity.id, 'type': 'day' }) }}">
+                                <i class="icon-star-empty"></i>
+                            </a>
+                        {% endif %}
+                    </td>
+                    <td class="favorite-col">
+                        {% if entity.favoriteWeek %}
+                            <a class="favorite" href="{{ path('thing_favorite', { 'id': entity.id, 'type': 'week' }) }}">
+                                <i class="icon-star"></i>
+                            </a>
+                        {% else %}
+                            <a class="favorite" href="{{ path('thing_favorite', { 'id': entity.id, 'type': 'week' }) }}">
+                                <i class="icon-star-empty"></i>
+                            </a>
+                        {% endif %}
+                    </td>
+                    <td class="favorite-col">
+                        {% if entity.favoriteMonth %}
+                            <a class="favorite" href="{{ path('thing_favorite', { 'id': entity.id, 'type': 'month' }) }}">
+                                <i class="icon-star"></i>
+                            </a>
+                        {% else %}
+                            <a class="favorite" href="{{ path('thing_favorite', { 'id': entity.id, 'type': 'month' }) }}">
+                                <i class="icon-star-empty"></i>
+                            </a>
+                        {% endif %}
+                    </td>
+                    <td class="favorite-col">
+                        {% if entity.favoriteYear %}
+                            <a class="favorite" href="{{ path('thing_favorite', { 'id': entity.id, 'type': 'year' }) }}">
+                                <i class="icon-star"></i>
+                            </a>
+                        {% else %}
+                            <a class="favorite" href="{{ path('thing_favorite', { 'id': entity.id, 'type': 'year' }) }}">
+                                <i class="icon-star-empty"></i>
+                            </a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        That&nbsp;
+                        <a href="{{ path("thing_day", { 'date': date|date('d-m-Y') }) }}">{{ "day" }}</a>,&nbsp;
+                        <a href="{{ path("thing_week", { 'date': date|date('d-m-Y') }) }}">{{ "week" }}</a>,&nbsp;
+                        <a href="{{ path("thing_month", { 'date': date|date('d-m-Y') }) }}">{{ "month" }}</a>,&nbsp;
+                        <a href="{{ path("thing_year", { 'date': date|date('d-m-Y') }) }}">{{ "year" }}</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+        </tbody>
+    </table>
+    <ul class="unstyled">
+        <li><a id="thing-create" href="{{ path("thing_new") }}">I did other things!</a></li>
+        <li><a id="thing-create-confirm" href="#" style="display:none">All done</a></li>
+        <li><a id="thing-create-cancel" href="#" style="display:none">Can't remember what it was :(</a></li>
+    </ul>
+    <div id="thing-new"></div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+    $(".icon-plus, .icon-minus").click(function(){
+        var description = $(this).siblings('span');
+        if ($(description).css('display') == 'none') {
+            $(description).show();
+            $(this).removeClass('icon-plus');
+            $(this).addClass('icon-minus');
+        }
+        else { 
+            $(description).hide();
+            $(this).addClass('icon-plus');
+            $(this).removeClass('icon-minus');
+        }
+    });
+
+    {# (un)favorite clicked range and the ones after it #}
+    $('.favorite').click(function(){
+        $.get(this.href);
+        favorite(this);
+        return false;
+    });
+
+    $("#thing-create").click(function(){
+        $("#thing-create").hide();
+        $("#thing-create-cancel").show();
+        $("#thing-create-confirm").show();
+        $.get(this.href, function(data){
+            $(data).insertAfter($('#thing-table'));
+            $(".thing-create-favorite-star").click(function(){
+                $(this).hide();
+                $(this).siblings('.thing-create-favorite').attr('checked', 'false');
+                $(this).siblings('.thing-create-favorite-star-empty').show();
+            });
+            $(".thing-create-favorite-star-empty").click(function(){
+                $(this).hide();
+                $(this).siblings('.thing-create-favorite').attr('checked', 'true');
+                $(this).siblings('.thing-create-favorite-star').show();
+            });
+        });
+        return false;
+    });
+
+    $("#thing-create-cancel").click(function(){
+        $("#thing-create-cancel").hide();
+        $("#thing-create-confirm").hide();
+        $("#thing-create").show();
+        $('#thing-table tbody tr:last').remove();
+    });
+
+});
+
+function favorite (obj) {
+    var img = $(obj).children('i');
+    var state = false;
+    if (img.hasClass('icon-star-empty'))
+    {
+        img.addClass('icon-star');
+        img.removeClass('icon-star-empty');
+        state = true;
+    }
+    else
+    {
+        img.removeClass('icon-star');
+        img.addClass('icon-star-empty');
+    }
+
+    var col = null;
+    if (state == true)
+    {
+        col = $(obj).parent().prev();
+    }
+    else
+    {
+        col = $(obj).parent().next();
+    }
+    while (col.hasClass('favorite-col'))
+    {
+        img = col.children('a').children('i');
+        if (state == true)
+        {
+            img.addClass('icon-star');
+            img.removeClass('icon-star-empty');
+            col = col.prev();
+        }
+        else
+        {
+            img.removeClass('icon-star');
+            img.addClass('icon-star-empty');
+            col = col.next();
+        }
+    }
+}
+</script>
+{% endblock %}

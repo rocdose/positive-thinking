@@ -1,0 +1,22 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}Positive thinking{% endblock %}
+
+{% block javascripts %}
+    {% javascripts
+        'bundles/positivethinkingmain/js/jquery.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
+{% block stylesheets %}
+    {% stylesheets 
+        'bundles/positivethinkingmain/css/bootstrap.css' filter='cssrewrite'
+        'bundles/positivethinkingmain/css/main.css' filter='cssrewrite'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body %}{% endblock %}

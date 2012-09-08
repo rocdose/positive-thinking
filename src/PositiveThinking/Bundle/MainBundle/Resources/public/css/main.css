@@ -1,0 +1,11 @@
+.padding-top {
+    padding-top: 40px;
+}
+
+.favorite-links-list li {
+    display: inline;
+}
+
+.favorite-col {
+    width: 4%;
+}

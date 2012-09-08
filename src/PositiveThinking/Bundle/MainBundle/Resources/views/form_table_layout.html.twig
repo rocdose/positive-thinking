@@ -1,0 +1,26 @@
+{% extends 'form_table_layout.html.twig' %}
+
+{% block checkbox_widget %}
+    {% spaceless %}
+    <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} style="display:none" class="thing-create-favorite"/> <i class="icon-star-empty thing-create-favorite-star-empty"></i> <i class="icon-star thing-create-favorite-star" style="display:none"></i>
+    {% endspaceless %}
+{% endblock checkbox_widget %}
+
+{% block field_widget %}
+    {% set type = type|default('text') %}
+    <input type="{{ type }}" {{ block('widget_attributes') }} value="{{ value }}" />
+{% endblock field_widget %}
+
+{% block date_widget %}
+{% spaceless %}
+    {% if widget == 'single_text' %}
+        {{ block('field_widget') }}
+    {% else %}
+        {{ date_pattern|replace({
+            '{{ year }}':  form_widget(form.year),
+            '{{ month }}': form_widget(form.month),
+            '{{ day }}':   form_widget(form.day),
+        })|raw }}
+    {% endif %}
+{% endspaceless %}
+{% endblock date_widget %}
